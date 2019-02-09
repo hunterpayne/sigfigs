@@ -1,7 +1,9 @@
 
 package org
 
+import scala.reflect.{ classTag, ClassTag }
 import java.lang.Math
+
 import sigfigs.SignificantDigits._
 
 /**
@@ -196,6 +198,8 @@ package object sigfigs {
       str.toByte.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toByte.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseByteSigOps
+    val tag: ClassTag[SignificantDigits[Byte]] = 
+      classTag[SignificantDigits[Byte]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -210,6 +214,8 @@ package object sigfigs {
       str.toByte.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toByte.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ByteSigOps
+    val tag: ClassTag[SignificantDigits[Byte]] = 
+      classTag[SignificantDigits[Byte]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
@@ -219,6 +225,8 @@ package object sigfigs {
       str.toShort.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toShort.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseShortSigOps
+    val tag: ClassTag[SignificantDigits[Short]] = 
+      classTag[SignificantDigits[Short]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -233,6 +241,8 @@ package object sigfigs {
       str.toShort.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toShort.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ShortSigOps
+    val tag: ClassTag[SignificantDigits[Short]] = 
+      classTag[SignificantDigits[Short]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
@@ -242,6 +252,7 @@ package object sigfigs {
       str.toInt.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toInt.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseIntSigOps
+    val tag: ClassTag[SignificantDigits[Int]] = classTag[SignificantDigits[Int]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -256,6 +267,7 @@ package object sigfigs {
       str.toInt.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toInt.asInstanceOf[T]
     override def reverse: Ordering[SDType] = IntSigOps
+    val tag: ClassTag[SignificantDigits[Int]] = classTag[SignificantDigits[Int]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
@@ -265,6 +277,8 @@ package object sigfigs {
       str.toLong.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toLong.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseLongSigOps
+    val tag: ClassTag[SignificantDigits[Long]] = 
+      classTag[SignificantDigits[Long]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -279,6 +293,8 @@ package object sigfigs {
       str.toLong.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toLong.asInstanceOf[T]
     override def reverse: Ordering[SDType] = LongSigOps
+    val tag: ClassTag[SignificantDigits[Long]] = 
+      classTag[SignificantDigits[Long]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
@@ -293,6 +309,8 @@ package object sigfigs {
       o.makeSigDigits(
         Math.round(x.toFloat).asInstanceOf[T2], calculateRoundedDigits(x))
     override def ulp(x: SDType): SDType = makeSigDigits(Math.ulp(x.toFloat), 1)
+    val tag: ClassTag[SignificantDigits[Float]] = 
+      classTag[SignificantDigits[Float]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -307,6 +325,8 @@ package object sigfigs {
       str.toFloat.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toFloat.asInstanceOf[T]
     override def reverse: Ordering[SDType] = FloatSigOps
+    val tag: ClassTag[SignificantDigits[Float]] = 
+      classTag[SignificantDigits[Float]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
@@ -321,6 +341,8 @@ package object sigfigs {
       o.makeSigDigits(
         Math.round(x.toDouble).asInstanceOf[T2], calculateRoundedDigits(x))
     override def ulp(x: SDType): SDType = makeSigDigits(Math.ulp(x.v), 1)
+    val tag: ClassTag[SignificantDigits[Double]] = 
+      classTag[SignificantDigits[Double]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -335,6 +357,8 @@ package object sigfigs {
       str.toDouble.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.asInstanceOf[T]
     override def reverse: Ordering[SDType] = DoubleSigOps
+    val tag: ClassTag[SignificantDigits[Double]] = 
+      classTag[SignificantDigits[Double]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
@@ -345,6 +369,8 @@ package object sigfigs {
     def to[T](d: Double)(implicit n: Numeric[T]): T = 
       BigInt(d.toLong).asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseBigIntSigOps
+    val tag: ClassTag[SignificantDigits[BigInt]] = 
+      classTag[SignificantDigits[BigInt]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -360,6 +386,8 @@ package object sigfigs {
     def to[T](d: Double)(implicit n: Numeric[T]): T = 
       BigInt(d.toLong).asInstanceOf[T]
     override def reverse: Ordering[SDType] = BigIntSigOps
+    val tag: ClassTag[SignificantDigits[BigInt]] = 
+      classTag[SignificantDigits[BigInt]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
@@ -370,6 +398,8 @@ package object sigfigs {
     def to[T](d: Double)(implicit n: Numeric[T]): T = 
       BigDecimal(d).asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseBigDecimalSigOps
+    val tag: ClassTag[SignificantDigits[BigDecimal]] = 
+      classTag[SignificantDigits[BigDecimal]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -385,6 +415,8 @@ package object sigfigs {
     def to[T](d: Double)(implicit n: Numeric[T]): T = 
       BigDecimal(d).asInstanceOf[T]
     override def reverse: Ordering[SDType] = BigDecimalSigOps
+    val tag: ClassTag[SignificantDigits[BigDecimal]] = 
+      classTag[SignificantDigits[BigDecimal]]
   }
 
   // to T value from SignificantDigits

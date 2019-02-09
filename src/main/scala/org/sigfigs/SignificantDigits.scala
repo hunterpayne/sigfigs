@@ -3,6 +3,7 @@ package org.sigfigs
 
 import java.lang.Math
 import java.text.DecimalFormat
+import scala.reflect.ClassTag
 
 object SDRoundingMode extends Enumeration {
   type Type = Value
@@ -118,6 +119,7 @@ object SignificantDigits {
 
     type SDType = SignificantDigits[T]
     protected val num: Numeric[T]
+    val tag: ClassTag[SignificantDigits[T]]
 
     /** lifts a normal integer (sometimes an integer literal from the 
       * Scala compiler) into a SignificantDigits[T] */
@@ -316,6 +318,7 @@ final class SignificantDigits[T](_v: T, _digits: Int)(
     extends util.PrettyPrinter {
 
   type SDType = SignificantDigits[T]
+  type UType = T
 
   /** accessor for the value being wrapped by this class */
   def v: T = _v

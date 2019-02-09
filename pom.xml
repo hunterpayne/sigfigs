@@ -16,7 +16,8 @@
 
   <properties>
     <!-- Resource identity sequence. -->
-    <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+<!--    <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format> -->
+    <maven.build.timestamp.format></maven.build.timestamp.format>
     
     <!-- Streaming release version. -->
     <release.epoch>1.0.0</release.epoch>
@@ -24,6 +25,7 @@
     <revision>${release.epoch}.${release.stamp}</revision>
 
     <!-- Must override in each cross-version module. -->
+    <version.scala.simple.epoch>2.11</version.scala.simple.epoch>
     <version.scala.epoch>2.11</version.scala.epoch>
     <version.scalatest.scala.epoch>2.11</version.scalatest.scala.epoch>
     <version.scalajstest.scala.epoch>2.11</version.scalajstest.scala.epoch>
@@ -66,6 +68,11 @@
       <artifactId>scala-library</artifactId>
       <version>${version.scala.release}</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kletz</groupId>
+      <artifactId>terra_${version.scala.simple.epoch}</artifactId>
+      <version>1.0.0.20190209002833</version>
     </dependency>
     <!--
     <dependency>

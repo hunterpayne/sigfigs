@@ -19,6 +19,7 @@
   <description>Produce cross-scala version build for Scala 2.11.</description>
   
   <properties>
+    <version.scala.simple.epoch>2.11</version.scala.simple.epoch>
     <version.scala.epoch>2.11</version.scala.epoch>
     <version.scala.release>2.11.12</version.scala.release>
     <version.scalamacro.scala.epoch>2.11.12</version.scalamacro.scala.epoch>
