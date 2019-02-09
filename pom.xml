@@ -22,7 +22,8 @@
     <!-- Streaming release version. -->
     <release.epoch>1.0.0</release.epoch>
     <release.stamp>${maven.build.timestamp}</release.stamp>
-    <revision>${release.epoch}.${release.stamp}</revision>
+    <!--    <revision>${release.epoch}.${release.stamp}</revision> -->
+    <revision>${release.epoch}</revision>
 
     <!-- Must override in each cross-version module. -->
     <version.scala.simple.epoch>2.11</version.scala.simple.epoch>
@@ -72,7 +73,7 @@
     <dependency>
       <groupId>org.kletz</groupId>
       <artifactId>terra_${version.scala.simple.epoch}</artifactId>
-      <version>1.0.0.20190209064453</version>
+      <version>1.0.0.20190209103352</version>
     </dependency>
     <!--
     <dependency>
@@ -203,7 +204,7 @@
               <goal>compile-test</goal>
 
 	      <!-- doesn't seem to want to compile, seems to be missing basic
-		   JVM stuff it needs
+		   JVM stuff it needs 
               <goal>scala-native-link-main</goal>
               <goal>scala-native-link-test</goal>
 	      
@@ -211,8 +212,8 @@
               <goal>scala-native-pack-test</goal>
 	      -->
 
-	      <!-- scala-js can't support the crazy reflection stuff we are
-		   doing
+	      <!-- scala-js compiler doesn't work for 2.13, likely due to
+		   mismatched verisions
 	      <goal>scala-js-link-main</goal>
               <goal>scala-js-link-test</goal>
 
@@ -220,7 +221,6 @@
               <goal>scala-js-env-prov-nodejs</goal>
               <goal>scala-js-env-conf-nodejs</goal>
 	      -->
-
             </goals>
           </execution>
         </executions>
