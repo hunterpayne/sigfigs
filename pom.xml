@@ -72,7 +72,7 @@
     <dependency>
       <groupId>org.kletz</groupId>
       <artifactId>terra_${version.scala.simple.epoch}</artifactId>
-      <version>1.0.0.20190209002833</version>
+      <version>1.0.0.20190209064453</version>
     </dependency>
     <!--
     <dependency>

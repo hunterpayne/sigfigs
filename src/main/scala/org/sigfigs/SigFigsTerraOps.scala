@@ -166,11 +166,11 @@ object SigFigsConverters extends Converters[SigFigsTuple] {
           converter[Short, Long](sd.asInstanceOf[SignificantDigits[Short]])
         case i: Int => 
           converter[Int, Long](sd.asInstanceOf[SignificantDigits[Int]])
-        case l: Long => 
-          converter[Long, Long](sd.asInstanceOf[SignificantDigits[Long]])
+        case l: Long => sd.asInstanceOf[SignificantDigits[Long]]
         case f: Float => 
           converter[Float, Long](sd.asInstanceOf[SignificantDigits[Float]])
-        case d: Double => sd.asInstanceOf[SignificantDigits[Long]]
+        case d: Double =>
+          converter[Double, Long](sd.asInstanceOf[SignificantDigits[Double]])
         case bd: BigDecimal => 
           converter[BigDecimal, Long](
             sd.asInstanceOf[SignificantDigits[BigDecimal]])
@@ -513,11 +513,36 @@ package object terra extends TypeScope[SigFigsTuple] {
     override def convT(d: T): TT = d
     override def rconvT(d: TT): T = d
 
-    def div[T](dividend: T, divisor: T)(
-      implicit e: HasEnsureType[T], tag: ClassTag[T]): T = ???
+    def div[T1](dividend: T1, divisor: T1)(
+      implicit e: HasEnsureType[T1], tag: ClassTag[T1]): T1 = dividend match {
+      case sd: SignificantDigits[_] =>
+        sd.v match {
+          case d: Double =>
+            ensureType[T1](sd.asInstanceOf[SDD].div(divisor.asInstanceOf[SDD]))
+          case l: Long => 
+            ensureType[T1](sd.asInstanceOf[SDL].div(divisor.asInstanceOf[SDL]))
+          case bd: BigDecimal => 
+            ensureType[T1](sd.asInstanceOf[SignificantDigits[BigDecimal]].div(
+              divisor.asInstanceOf[SignificantDigits[BigDecimal]]))
+          case _ => assert(false); nt[T1].zero
+        }
+        case _ => assert(false); nt[T1].zero
+    }
 
-    def mod[T](dividend: T, divisor: T)(
-      implicit e: HasEnsureType[T], tag: ClassTag[T]): T = ???
+    def mod[T1](dividend: T1, divisor: T1)(
+      implicit e: HasEnsureType[T1], tag: ClassTag[T1]): T1 = dividend match {
+      case sd: SignificantDigits[_] => sd.v match {
+        case d: Double =>
+          ensureType[T1](sd.asInstanceOf[SDD].rem(divisor.asInstanceOf[SDD]))
+        case l: Long =>
+          ensureType[T1](sd.asInstanceOf[SDL].rem(divisor.asInstanceOf[SDL]))
+        case bd: BigDecimal =>
+          ensureType[T1](sd.asInstanceOf[SignificantDigits[BigDecimal]].rem(
+            divisor.asInstanceOf[SignificantDigits[BigDecimal]]))
+        case _ => assert(false); nt[T1].zero
+      }
+      case _ => assert(false); nt[T1].zero
+    }
 
     def floorT[T1](t: T1)(implicit e: HasEnsureType[T1]): T1 = {
       implicit val e1: HasEnsureType[T] = converters.ensureT

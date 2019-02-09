@@ -416,6 +416,11 @@ final class SignificantDigits[T](_v: T, _digits: Int)(
   private[this] lazy val rounder = Math.pow(10.0, leastDigit.toDouble)
   lazy val rounded = roundToSD
 
+  override def equals(o: Any): Boolean = o match {
+    case sd: SignificantDigits[_] => sd.v == v && sd.digits == digits
+    case _ => false
+  }
+
   private[this] def roundToSD: T = {
     val rounded = Math.round(toDouble / rounder) * rounder
     n.to[T](rounded)

@@ -439,6 +439,11 @@ final class SignificantDigits[T](_v: T, _digits: Int)(
     df
   }
 
+  override def equals(o: Any): Boolean = o match {
+    case sd: SignificantDigits[_] => sd.v == v && sd.digits == digits
+    case _ => false
+  }
+
   /** returns the raw value as an unformatted string, mostly for debugging */
   def rawString: String = _v.toString
   
