@@ -4,7 +4,7 @@ package information
 
 import org.scalatest.{ Matchers, FlatSpec, TryValues }
 
-import terra._
+import org.sigfigs.terra._
 import terra.information._
 import terra.time.Seconds
 
@@ -21,13 +21,6 @@ class DataRateSpec
 
   it should "create values using UOM factories" in {
     BytesPerSecond(1).toBytesPerSecond should be(SDD(1))
-    //println("res " + res + " of type " + res.getClass.getName + " inner " + res.asInstanceOf[SignificantDigits[_]].v.getClass.getName)
-    //val answer = SDD(1)
-    //println("answer " + answer + " of type " + answer.getClass.getName + " inner " + answer.asInstanceOf[SignificantDigits[_]].v.getClass.getName)
-    //println("well " + answer.equals(res))
-    //println("well2 " + (res == answer))
-
-    //res should be(answer) //SDD(1))
 
     KilobytesPerSecond(1).toKilobytesPerSecond  should be(SDD(1))
     MegabytesPerSecond(1).toMegabytesPerSecond  should be(SDD(1))

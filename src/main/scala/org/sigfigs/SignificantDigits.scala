@@ -273,7 +273,7 @@ object SignificantDigits {
       * calling code via an implicit type conversion, used by whole
       * Numeric types: Int, Long etc
       */
-    class SignificantOpsIntegral(lhs: SDType) extends Ops(lhs) {
+    class SignificantOpsIntegral(lhs: SDType) extends Numeric.Ops(lhs) {
       def /(rhs: SDType): SDType = quot(lhs, rhs)
       def %(rhs: SDType): SDType = rem(lhs, rhs)
       def /%(rhs: SDType): (SDType, SDType) = (quot(lhs, rhs), rem(lhs, rhs))
