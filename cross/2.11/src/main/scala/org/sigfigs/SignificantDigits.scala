@@ -1,7 +1,6 @@
 
 package org.sigfigs
 
-import scala.reflect.{ classTag, ClassTag }
 import java.lang.Math
 import java.text.DecimalFormat
 
@@ -121,7 +120,6 @@ object SignificantDigits {
 
     type SDType = SignificantDigits[T]
     protected val num: Numeric[T]
-    val tag: ClassTag[SignificantDigits[T]]
 
     /** lifts a normal integer (sometimes an integer literal from the 
       * Scala compiler) into a SignificantDigits[T] */
