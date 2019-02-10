@@ -161,11 +161,11 @@ object SignificantDigits {
 
     /** standard min using underlying data and its associated Numeric to
       * do the calculations */
-    override def min(x: SDType, y: SDType): SDType = 
+    override def min[U <: SDType](x: U, y: U): U =
       if (num.gt(num.minus(x.v, y.v), num.zero)) y else x
     /** standard max using underlying data and its associated Numeric to
       * do the calculations */
-    override def max(x: SDType, y: SDType): SDType =
+    override def max[U <: SDType](x: U, y: U): U =
       if (num.gt(num.minus(x.v, y.v), num.zero)) x else y
 
     /** rounds one SignificantDigits type to another SignificantDigits type,
@@ -273,7 +273,7 @@ object SignificantDigits {
       * calling code via an implicit type conversion, used by whole
       * Numeric types: Int, Long etc
       */
-    class SignificantOpsIntegral(lhs: SDType) extends Numeric.Ops(lhs) {
+    class SignificantOpsIntegral(lhs: SDType) extends NumericOps(lhs) {
       def /(rhs: SDType): SDType = quot(lhs, rhs)
       def %(rhs: SDType): SDType = rem(lhs, rhs)
       def /%(rhs: SDType): (SDType, SDType) = (quot(lhs, rhs), rem(lhs, rhs))
