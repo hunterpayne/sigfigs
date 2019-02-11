@@ -636,5 +636,120 @@ package object terra extends TypeScope[SigFigsTuple] {
   object thermal extends SymbolMixin
       with org.terra.thermal.ThermalSymbols[SigFigsTuple]
   object market extends SymbolMixin
-      with org.terra.market.MarketSymbols[SigFigsTuple] 
+      with org.terra.market.MarketSymbols[SigFigsTuple]
+
+  implicit class QuantityDoubleT(d: Double)
+      extends QuantityHelper[SigFigsTuple#T, SDD](SDD(d), DoubleSigOps) {
+
+    def *[A <: Quantity[A, SigFigsTuple#T, SigFigsTuple]](that: A): A =
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#T, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#T, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#T, SigFigsTuple] =
+      times(that)
+    def /(that: Time): Frequency = div(that)
+    def per(that: Time): Frequency = div(that)
+  }
+
+  implicit class QuantityDoubleTL(d: Double) 
+      extends QuantityHelper[SigFigsTuple#TL, SDD](SDD(d), DoubleSigOps) {
+    def *[A <: Quantity[A, SigFigsTuple#TL, SigFigsTuple]](that: A): A = 
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#TL, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#TL, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#TL, SigFigsTuple] =
+      times(that)
+  }
+
+  implicit class QuantityLongT(l: Long)
+      extends QuantityHelper[SigFigsTuple#T, SDL](SDL(l), LongSigOps) {
+
+    def *[A <: Quantity[A, SigFigsTuple#T, SigFigsTuple]](that: A): A = 
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#T, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#T, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#T, SigFigsTuple] = 
+      times(that)
+    def /(that: Time): Frequency = div(that)
+    def per(that: Time): Frequency = div(that)
+  }
+
+  implicit class QuantityLongTL(l: Long) 
+    extends QuantityHelper[SigFigsTuple#TL, SDL](SDL(l), LongSigOps) {
+
+    def *[A <: Quantity[A, SigFigsTuple#TL, SigFigsTuple]](that: A): A =
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#TL, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#TL, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#TL, SigFigsTuple] =
+      times(that)
+  }
+
+  //implicit class QuantityLongTT(l: Long) extends QuantityDoubleTT(l.toDouble)
+
+  implicit class QuantityIntT(i: Int) 
+      extends QuantityHelper[SigFigsTuple#T, SDI](SDI(i), IntSigOps) {
+
+    def *[A <: Quantity[A, SigFigsTuple#T, SigFigsTuple]](that: A): A = 
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#T, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#T, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#T, SigFigsTuple] =
+      times(that)
+    def /(that: Time): Frequency = div(that)
+    def per(that: Time): Frequency = div(that)
+  }
+
+  implicit class QuantityIntTL(i: Int) 
+      extends QuantityHelper[SigFigsTuple#TL, SDI](SDI(i), IntSigOps) {
+
+    def *[A <: Quantity[A, SigFigsTuple#TL, SigFigsTuple]](that: A): A = 
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#TL, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#TL, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#TL, SigFigsTuple] =
+      times(that)
+  }
+
+  //implicit class QuantityIntTT(i: Int) extends QuantityDoubleTT(i.toDouble)
+
+  implicit class QuantityBigDecimalT(bd: BigDecimal) 
+      extends QuantityHelper[SigFigsTuple#T, SignificantDigits[BigDecimal]](
+    SignificantDigits[BigDecimal](bd), BigDecimalSigOps) {
+
+    def *[A <: Quantity[A, SigFigsTuple#T, SigFigsTuple]](that: A): A = 
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#T, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#T, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#T, SigFigsTuple] =
+      times(that)
+    def /(that: Time): Frequency = div(that)
+    def per(that: Time): Frequency = div(that)
+  }
+
+  implicit class QuantityBigDecimalTL(bd: BigDecimal) 
+      extends QuantityHelper[SigFigsTuple#TL, SignificantDigits[BigDecimal]](
+    SignificantDigits[BigDecimal](bd), BigDecimalSigOps) {
+
+    def *[A <: Quantity[A, SigFigsTuple#TL, SigFigsTuple]](that: A): A = 
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#TL, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#TL, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#TL, SigFigsTuple] =
+      times(that)
+  }
+  
+  implicit class QuantityBigDecimalTC(bd: BigDecimal) 
+      extends QuantityHelper[SigFigsTuple#TC, SignificantDigits[BigDecimal]](
+    SignificantDigits[BigDecimal](bd), BigDecimalSigOps) {
+
+    def *[A <: Quantity[A, SigFigsTuple#TC, SigFigsTuple]](that: A): A = 
+      times(that)
+    def *[A <: Quantity[A, SigFigsTuple#TC, SigFigsTuple]](
+      that: SVector[A, SigFigsTuple#TC, SigFigsTuple]): 
+        SVector[A, SigFigsTuple#TC, SigFigsTuple] =
+      times(that)
+  }
+
+  //implicit class QuantityBigDecimalTT(i: Int) extends QuantityHelper(i.toDouble)
 }
