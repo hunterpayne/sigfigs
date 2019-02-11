@@ -301,7 +301,9 @@ package object terra extends TypeScope[SigFigsTuple] {
       with VolumeOps[C]
       with TemperatureOps[C]
       with ThermalCapacityOps[C]
-      with MoneyOps[C] {
+      with MoneyOps[C]
+      with EmployeeOps[C]
+      with LaborOps[C] {
 
     val SDDTag = classTag[SDD]
     val SDLTag = classTag[SDL]
@@ -421,6 +423,8 @@ package object terra extends TypeScope[SigFigsTuple] {
     val thermalCapacityOps: ThermalCapacityOps[C] = this
 
     val moneyOps: MoneyOps[C] = this
+    val employeeOps: EmployeeOps[C] = this
+    val laborOps: LaborOps[C] = this
   }
 
   /**
