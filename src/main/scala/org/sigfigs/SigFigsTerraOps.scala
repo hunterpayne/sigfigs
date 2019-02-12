@@ -266,6 +266,8 @@ package object terra extends TypeScope[SigFigsTuple] {
       with MassOps[C]
       with MomentOfInertiaOps[C]
       with MolarMassOps[C]
+      with ConcentrationOps[C]
+      with CatalyticActivityOps[C]
       with AccelerationOps[C]
       with AngularAccelerationOps[C]
       with AngularVelocityOps[C]
@@ -382,6 +384,8 @@ package object terra extends TypeScope[SigFigsTuple] {
     val massOps: MassOps[C] = this
     val momentOfInertiaOps: MomentOfInertiaOps[C] = this
     val molarMassOps: MolarMassOps[C] = this
+    val concentrationOps: ConcentrationOps[C] = this
+    val catalyticActivityOps: CatalyticActivityOps[C] = this
 
     val accelerationOps: AccelerationOps[C] = this
     val angularAccelerationOps: AngularAccelerationOps[C] = this
