@@ -255,6 +255,7 @@ package object terra extends TypeScope[SigFigsTuple] {
       with ResistivityOps[C]
       with EnergyOps[C]
       with EnergyDensityOps[C]
+      with EnergyAreaDensityOps[C]
       with MolarEnergyOps[C]
       with PowerOps[C]
       with PowerDensityOps[C]
@@ -281,6 +282,8 @@ package object terra extends TypeScope[SigFigsTuple] {
       with VelocityOps[C]
       with VolumeFlowOps[C]
       with YankOps[C]
+      with SurfaceTensionOps[C]
+      with ViscosityOps[C]
       with IlluminanceOps[C]
       with LuminanceOps[C]
       with LuminousEnergyOps[C]
@@ -297,11 +300,14 @@ package object terra extends TypeScope[SigFigsTuple] {
       with SpectralIntensityOps[C]
       with SpectralIrradianceOps[C]
       with SpectralPowerOps[C]
+      with AbsorbedDoseOps[C]
       with AngleOps[C]
       with AreaOps[C]
       with LengthOps[C]
       with SolidAngleOps[C]
       with VolumeOps[C]
+      with MolarVolumeOps[C]
+      with SpecificVolumeOps[C]
       with TemperatureOps[C]
       with ThermalCapacityOps[C]
       with MoneyOps[C]
@@ -372,6 +378,7 @@ package object terra extends TypeScope[SigFigsTuple] {
 
     val energyOps: EnergyOps[C] = this
     val energyDensityOps: EnergyDensityOps[C] = this
+    val energyAreaDensityOps: EnergyAreaDensityOps[C] = this
     val molarEnergyOps: MolarEnergyOps[C] = this
     val powerOps: PowerOps[C] = this
     val powerDensityOps: PowerDensityOps[C] = this
@@ -400,6 +407,8 @@ package object terra extends TypeScope[SigFigsTuple] {
     val velocityOps: VelocityOps[C] = this
     val volumeFlowOps: VolumeFlowOps[C] = this
     val yankOps: YankOps[C] = this
+    val surfaceTensionOps: SurfaceTensionOps[C] = this
+    val viscosityOps: ViscosityOps[C] = this
 
     val illuminanceOps: IlluminanceOps[C] = this
     val luminanceOps: LuminanceOps[C] = this
@@ -418,12 +427,15 @@ package object terra extends TypeScope[SigFigsTuple] {
     val spectralIntensityOps: SpectralIntensityOps[C] = this
     val spectralIrradianceOps: SpectralIrradianceOps[C] = this
     val spectralPowerOps: SpectralPowerOps[C] = this
+    val absorbedDoseOps: AbsorbedDoseOps[C] = this
 
     val angleOps: AngleOps[C] = this
     val areaOps: AreaOps[C] = this
     val lengthOps: LengthOps[C] = this
     val solidAngleOps: SolidAngleOps[C] = this
     val volumeOps: VolumeOps[C] = this
+    val molarVolumeOps: MolarVolumeOps[C] = this
+    val specificVolumeOps: SpecificVolumeOps[C] = this
 
     val temperatureOps: TemperatureOps[C] = this
     val thermalCapacityOps: ThermalCapacityOps[C] = this
