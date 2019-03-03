@@ -116,7 +116,8 @@ object SignificantDigits {
     * SignificantDigits instances just like regular numbers with extra
     * capabilities
     */
-  trait SignificantOps[T] extends Fractional[SignificantDigits[T]] {
+  trait SignificantOps[T] { self: Numeric[SignificantDigits[T]] => 
+    //extends Fractional[SignificantDigits[T]] {
 
     type SDType = SignificantDigits[T]
     protected val num: Numeric[T]
@@ -161,11 +162,11 @@ object SignificantDigits {
 
     /** standard min using underlying data and its associated Numeric to
       * do the calculations */
-    override def min(x: SDType, y: SDType): SDType = 
+    def sdmin(x: SDType, y: SDType): SDType =
       if (num.gt(num.minus(x.v, y.v), num.zero)) y else x
     /** standard max using underlying data and its associated Numeric to
       * do the calculations */
-    override def max(x: SDType, y: SDType): SDType =
+    def sdmax(x: SDType, y: SDType): SDType =
       if (num.gt(num.minus(x.v, y.v), num.zero)) x else y
 
     /** rounds one SignificantDigits type to another SignificantDigits type,
@@ -177,7 +178,7 @@ object SignificantDigits {
 
     /** removes negations if present, does work here using the underlying value,
       * and keeps the same number of significant digits no matter what */
-    override def abs(x: SDType): SDType = makeSigDigits(num.abs(x.v), x.digits)
+    def sdabs(x: SDType): SDType = makeSigDigits(num.abs(x.v), x.digits)
 
     /** does a type dependant signum (ie T -> T) instead of a T -> Int typed
       * signum, uses the underlying value T and sets the number of significant
@@ -190,7 +191,7 @@ object SignificantDigits {
     /** type independant signum T -> Int.  uses the Numeric[T] implementation
       * of signum and returns an Int which has no concept of significant digits
       */
-    override def signum(x: SDType): Int = num.signum(x.v)
+    def sdsignum(x: SDType): Int = num.signum(x.v)
 
     /** only 1 significant digit returned by this method, only supported with
       * Doubles and Floats, probably shouldn't even exist */
@@ -258,37 +259,129 @@ object SignificantDigits {
     /** class which injects the math operator overloads +,-,*,/ into the
       * calling code via an implicit type conversion, used by non whole
       * Numeric types: Double, Float, etc */
-    class SignificantOpsFractional(lhs: SDType) extends FractionalOps(lhs)
+    //class SignificantOpsFractional(lhs: SDType) extends FractionalOps(lhs)
     /** class which injects the math operator overloads +,-,*,/,% into the
       * calling code via an implicit type conversion, used by whole
       * Numeric types: Int, Long etc
-      */
     class SignificantOpsIntegral(lhs: SDType) extends Ops(lhs) {
       def /(rhs: SDType): SDType = quot(lhs, rhs)
       def %(rhs: SDType): SDType = rem(lhs, rhs)
       def /%(rhs: SDType): (SDType, SDType) = (quot(lhs, rhs), rem(lhs, rhs))
     }
+      */
+    def compare(x: SDType, y: SDType): Int
   }
 
   /**
     * super class of all the SignificantDigits Numerics implicits when
     * normal ordering is requested
     */
-  abstract class ForwardSigOps[T](implicit numb: Numeric[T])
-      extends SignificantOps[T] {
+  abstract class ForwardSigFractionalOps[T](implicit numb: Numeric[T])
+      extends SignificantOps[T] with Fractional[SignificantDigits[T]] {
     assert(numb != null)
     protected val num: Numeric[T] = numb
     def compare(x: SDType, y: SDType): Int = x.minus(y).toInt
+
+    override def abs(x: SignificantDigits[T]): SignificantDigits[T] = sdabs(x)
+    override def signum(x: SDType): Int = sdsignum(x)
+    override def min(x: SDType, y: SDType): SDType = sdmin(x, y)
+    override def max(x: SDType, y: SDType): SDType = sdmax(x, y)
+
+    override implicit def mkNumericOps(
+      lhs: SignificantDigits[T]): FractionalOps =
+      new SignificantOpsFractional(lhs)
+
+    /** class which injects the math operator overloads +,-,*,/ into the
+      * calling code via an implicit type conversion, used by non whole
+      * Numeric types: Double, Float, etc */
+    class SignificantOpsFractional(lhs: SDType) extends FractionalOps(lhs)
+    /*
+    class SignificantOpsIntegral(lhs: SDType) extends NumericOps(lhs) {
+      def /(rhs: SDType): SDType = quot(lhs, rhs)
+      def %(rhs: SDType): SDType = rem(lhs, rhs)
+      def /%(rhs: SDType): (SDType, SDType) = (quot(lhs, rhs), rem(lhs, rhs))
+    }
+     */
   }
 
   /**
     * super class of all the SignificantDigits Numerics implicits when
     * reverse ordering is requested
     */
-  abstract class ReverseSigOps[T](implicit numb: Numeric[T])
-      extends SignificantOps[T] {
+  abstract class ReverseSigFractionalOps[T](implicit numb: Numeric[T])
+      extends SignificantOps[T] with Fractional[SignificantDigits[T]] {
     protected val num: Numeric[T] = numb
     def compare(x: SDType, y: SDType): Int = y.minus(x).toInt
+
+    override def abs(x: SignificantDigits[T]): SignificantDigits[T] = sdabs(x)
+    override def signum(x: SDType): Int = sdsignum(x)
+    override def min(x: SDType, y: SDType): SDType = sdmin(x, y)
+    override def max(x: SDType, y: SDType): SDType = sdmax(x, y)
+
+    override implicit def mkNumericOps(
+      lhs: SignificantDigits[T]): FractionalOps =
+      new SignificantOpsFractional(lhs)
+
+    /** class which injects the math operator overloads +,-,*,/ into the
+      * calling code via an implicit type conversion, used by non whole
+      * Numeric types: Double, Float, etc */
+    class SignificantOpsFractional(lhs: SDType) extends FractionalOps(lhs)
+    /*
+    class SignificantOpsIntegral(lhs: SDType) extends NumericOps(lhs) {
+      def /(rhs: SDType): SDType = quot(lhs, rhs)
+      def %(rhs: SDType): SDType = rem(lhs, rhs)
+      def /%(rhs: SDType): (SDType, SDType) = (quot(lhs, rhs), rem(lhs, rhs))
+    }
+     */
+  }
+
+  /**
+    * super class of all the SignificantDigits Numerics implicits when
+    * normal ordering is requested
+    */
+  abstract class ForwardSigIntegralOps[T](implicit numb: Numeric[T])
+      extends SignificantOps[T] with Integral[SignificantDigits[T]] {
+    assert(numb != null)
+    protected val num: Numeric[T] = numb
+    def compare(x: SDType, y: SDType): Int = x.minus(y).toInt
+
+    override def abs(x: SignificantDigits[T]): SignificantDigits[T] = sdabs(x)
+    override def signum(x: SDType): Int = sdsignum(x)
+    override def min(x: SDType, y: SDType): SDType = sdmin(x, y)
+    override def max(x: SDType, y: SDType): SDType = sdmax(x, y)
+
+    override implicit def mkNumericOps(lhs: SDType): IntegralOps =
+      new SignificantOpsIntegral(lhs)
+
+    /** class which injects the math operator overloads +,-,*,/,% into the
+      * calling code via an implicit type conversion, used by whole
+      * Numeric types: Int, Long etc
+      */
+    class SignificantOpsIntegral(lhs: SDType) extends IntegralOps(lhs) //{
+  }
+
+  /**
+    * super class of all the SignificantDigits Numerics implicits when
+    * reverse ordering is requested
+    */
+  abstract class ReverseSigIntegralOps[T](implicit numb: Numeric[T])
+      extends SignificantOps[T] with Integral[SignificantDigits[T]] {
+    protected val num: Numeric[T] = numb
+    def compare(x: SDType, y: SDType): Int = y.minus(x).toInt
+
+    override def abs(x: SignificantDigits[T]): SignificantDigits[T] = sdabs(x)
+    override def signum(x: SDType): Int = sdsignum(x)
+    override def min(x: SDType, y: SDType): SDType = sdmin(x, y)
+    override def max(x: SDType, y: SDType): SDType = sdmax(x, y)
+
+    override implicit def mkNumericOps(lhs: SDType): IntegralOps =
+      new SignificantOpsIntegral(lhs)
+
+    /** class which injects the math operator overloads +,-,*,/,% into the
+      * calling code via an implicit type conversion, used by whole
+      * Numeric types: Int, Long etc
+      */
+    class SignificantOpsIntegral(lhs: SDType) extends IntegralOps(lhs) 
   }
 }
 

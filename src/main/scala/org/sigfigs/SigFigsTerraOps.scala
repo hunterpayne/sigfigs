@@ -1,7 +1,6 @@
 
 package org.sigfigs
 
-import scala.reflect.{ ClassTag, classTag }
 import scala.math.BigDecimal
 import scala.math.BigDecimal.RoundingMode
 import scala.math.BigDecimal.RoundingMode.RoundingMode
@@ -315,37 +314,21 @@ package object terra extends TypeScope[SigFigsTuple] {
       with EmployeeOps[C]
       with LaborOps[C] {
 
-    val SDDTag = classTag[SDD]
-    val SDLTag = classTag[SDL]
-    val SDBigDecimalTag = classTag[SignificantDigits[BigDecimal]]
-    val IntTag = classTag[Int]
+    def getClassTagT: PseudoClassTag[T] = pseudoClassTagT[T]
+    def getClassTagTL: PseudoClassTag[TL] = pseudoClassTagTL[TL]
+    def getClassTagTT: PseudoClassTag[TT] = pseudoClassTagTT[TT]
+    def getClassTagTC: PseudoClassTag[TC] = pseudoClassTagTC[TC]
 
-    override val getClassTagT: ClassTag[T] = SDDTag.asInstanceOf[ClassTag[T]]
-    override val getClassTagTL: ClassTag[TL] = SDLTag.asInstanceOf[ClassTag[TL]]
-    override val getClassTagTC: ClassTag[TC] = 
-      SDBigDecimalTag.asInstanceOf[ClassTag[TC]]
-    override val getClassTagTT: ClassTag[TT] = SDDTag.asInstanceOf[ClassTag[TT]]
-
-    def nt[T1](implicit tag: ClassTag[T1]): Numeric[T1] =
-      tag match {
-        case `getClassTagT` => num.asInstanceOf[Numeric[T1]]
-        case `getClassTagTL` => numL.asInstanceOf[Numeric[T1]]
-        case `getClassTagTC` => numC.asInstanceOf[Numeric[T1]]
-        case `getClassTagTT` => numT.asInstanceOf[Numeric[T1]]
-        case SDDTag => num.asInstanceOf[Numeric[T1]]
-        case SDLTag => numL.asInstanceOf[Numeric[T1]]
-        case IntTag => Numeric.IntIsIntegral.asInstanceOf[Numeric[T1]]
-        case clz if (clz != null) => {
-          println("got clz " + clz + " of type " + clz.runtimeClass)
-          //assert(nl.isInstanceOf[Numeric[T1]])
-          num.asInstanceOf[Numeric[T1]]
-        }
-        case _ => {
-          //(new Exception("null class tag guessing")).printStackTrace()
-          println("null class tag guessing")
-          num.asInstanceOf[Numeric[T1]]
-        }
+    def nt[T1](implicit tag: PseudoClassTag[T1]): Numeric[T1] = {
+      import ClassTagType._
+      tag.typ match {
+        case TE => num.asInstanceOf[Numeric[T1]]
+        case TLE => numL.asInstanceOf[Numeric[T1]]
+        case TCE => numC.asInstanceOf[Numeric[T1]]
+        case TTE => numT.asInstanceOf[Numeric[T1]]
+        case _ => assert(false); num.asInstanceOf[Numeric[T1]]
       }
+    }
 
     val dimensionlessOps: DimensionlessOps[C] = this
 
@@ -455,17 +438,11 @@ package object terra extends TypeScope[SigFigsTuple] {
   implicit object SigFigsTerraOps 
       extends AbstractSigFigsTerraOps[SigFigsTuple] {
 
-    implicit val num: Numeric[T] = DoubleSigOps
-    implicit val numL: Numeric[TL] = LongSigOps
-    implicit val numC: Numeric[TC] = BigDecimalSigOps
-    implicit val numT: Numeric[TT] = DoubleSigOps
-
-    // already done in superclass, if we make more TerraOps, we need to override
-    // these
-    //override val getClassTagT: ClassTag[C#T] = SDDTag
-    //override val getClassTagTL: ClassTag[C#TL] = SDLTag
-    //override val getClassTagTC: ClassTag[C#TC] = SDBigDecimalTag
-    //override val getClassTagTT: ClassTag[C#TT] = SDDTag
+    implicit val num: Fractional[T] = DoubleSigOps.asInstanceOf[Fractional[T]]
+    implicit val numL: Numeric[TL] = LongSigOps.asInstanceOf[Numeric[TL]]
+    implicit val numC: Fractional[TC] = 
+      BigDecimalSigOps.asInstanceOf[Fractional[TC]]
+    implicit val numT: Numeric[TT] = DoubleSigOps.asInstanceOf[Numeric[TT]]
 
     val converters = SigFigsConverters
 
@@ -538,35 +515,25 @@ package object terra extends TypeScope[SigFigsTuple] {
     override def rconvT(d: TT): T = d
 
     def div[T1](dividend: T1, divisor: T1)(
-      implicit e: HasEnsureType[T1], tag: ClassTag[T1]): T1 = dividend match {
-      case sd: SignificantDigits[_] =>
-        sd.v match {
-          case d: Double =>
-            ensureType[T1](sd.asInstanceOf[SDD].div(divisor.asInstanceOf[SDD]))
-          case l: Long => 
-            ensureType[T1](sd.asInstanceOf[SDL].div(divisor.asInstanceOf[SDL]))
-          case bd: BigDecimal => 
-            ensureType[T1](sd.asInstanceOf[SignificantDigits[BigDecimal]].div(
-              divisor.asInstanceOf[SignificantDigits[BigDecimal]]))
-          case _ => assert(false); nt[T1].zero
-        }
-        case _ => assert(false); nt[T1].zero
-    }
+      implicit e: HasEnsureType[T1], tag: PseudoClassTag[T1]): T1 =
+      nt[T1] match {
+        case f: Fractional[T1] => e.ensureType(f.div(dividend, divisor))
+        case i: Integral[T1] => e.ensureType(i.quot(dividend, divisor))
+        case _ => assert(false); ???
+      }
 
     def mod[T1](dividend: T1, divisor: T1)(
-      implicit e: HasEnsureType[T1], tag: ClassTag[T1]): T1 = dividend match {
-      case sd: SignificantDigits[_] => sd.v match {
-        case d: Double =>
-          ensureType[T1](sd.asInstanceOf[SDD].rem(divisor.asInstanceOf[SDD]))
-        case l: Long =>
-          ensureType[T1](sd.asInstanceOf[SDL].rem(divisor.asInstanceOf[SDL]))
-        case bd: BigDecimal =>
-          ensureType[T1](sd.asInstanceOf[SignificantDigits[BigDecimal]].rem(
-            divisor.asInstanceOf[SignificantDigits[BigDecimal]]))
-        case _ => assert(false); nt[T1].zero
+      implicit e: HasEnsureType[T1], tag: PseudoClassTag[T1]): T1 =
+      nt[T1] match {
+        case f: Fractional[T1] =>
+          // dividend - (floor(dividend / divisor) * divisor)
+          f.plus(dividend, f.negate(
+            f.times(
+              floorT[T1](e.ensureType(f.div(dividend, divisor))),
+              divisor)))
+        case i: Integral[T1] => e.ensureType(i.rem(dividend, divisor))
+        case _ => assert(false); ???
       }
-      case _ => assert(false); nt[T1].zero
-    }
 
     def floorT[T1](t: T1)(implicit e: HasEnsureType[T1]): T1 = {
       implicit val e1: HasEnsureType[T] = converters.ensureT
@@ -633,7 +600,8 @@ package object terra extends TypeScope[SigFigsTuple] {
     }
   }
 
-  val ops = SigFigsTerraOps
+  implicit val ops = SigFigsTerraOps
+  implicit val tag: PseudoClassTag[SigFigsTuple#T] = ops.getClassTagT
 
   trait SymbolMixin {
     implicit val ops: TerraOps[SigFigsTuple] = SigFigsTerraOps

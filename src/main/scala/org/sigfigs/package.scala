@@ -1,7 +1,6 @@
 
 package org
 
-import scala.reflect.{ classTag, ClassTag }
 import java.lang.Math
 
 import sigfigs.SignificantDigits._
@@ -98,16 +97,18 @@ package object sigfigs {
 
   /** wraps the abs method, keeps the number of significant digits the same */
   def abs[T](x: SignificantDigits[T])(
-    implicit n: SignificantOps[T]):
-      SignificantDigits[T] = n.abs(x)
+    implicit n: SignificantOps[T]): SignificantDigits[T] = 
+    n.sdabs(x)
 
   /** delegates to the SignificantOps[T].max method */
   def max[T](x: SignificantDigits[T], y: SignificantDigits[T])(
-    implicit n: SignificantOps[T]): SignificantDigits[T] = n.max(x, y)
+    implicit n: SignificantOps[T]): SignificantDigits[T] = 
+    n.sdmax(x, y)
 
   /** delegates to the SignificantOps[T].min method */
   def min[T](x: SignificantDigits[T], y: SignificantDigits[T])(
-    implicit n: SignificantOps[T]): SignificantDigits[T] = n.min(x, y)
+    implicit n: SignificantOps[T]): SignificantDigits[T] = 
+    n.sdmin(x, y)
 
   /** delegates to the SignificantOps[T].signum method */
   def signum[T](x: SignificantDigits[T])(
@@ -193,13 +194,13 @@ package object sigfigs {
 
   // implicit Numeric implementations and implicit type conversions needed
   // to make the SignificantDigits[Byte] work
-  implicit object ByteSigOps extends ForwardSigOps[Byte] {
+  implicit object ByteSigOps extends ForwardSigIntegralOps[Byte] {
     def to[T](str: String)(implicit n: Numeric[T]): T =
       str.toByte.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toByte.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseByteSigOps
-    val tag: ClassTag[SignificantDigits[Byte]] = 
-      classTag[SignificantDigits[Byte]]
+    //val tag: ClassTag[SignificantDigits[Byte]] = 
+      //classTag[SignificantDigits[Byte]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -209,24 +210,24 @@ package object sigfigs {
     new ByteSigOps.SignificantOpsIntegral(left)
 
   // same as ByteSigOps but provides a reversed ordering
-  object ReverseByteSigOps extends ReverseSigOps[Byte] {
+  object ReverseByteSigOps extends ReverseSigIntegralOps[Byte] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toByte.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toByte.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ByteSigOps
-    val tag: ClassTag[SignificantDigits[Byte]] = 
-      classTag[SignificantDigits[Byte]]
+    //val tag: ClassTag[SignificantDigits[Byte]] =
+      //classTag[SignificantDigits[Byte]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
   // to make the SignificantDigits[Short] work
-  implicit object ShortSigOps extends ForwardSigOps[Short] {
+  implicit object ShortSigOps extends ForwardSigIntegralOps[Short] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toShort.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toShort.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseShortSigOps
-    val tag: ClassTag[SignificantDigits[Short]] = 
-      classTag[SignificantDigits[Short]]
+    //val tag: ClassTag[SignificantDigits[Short]] =
+      //classTag[SignificantDigits[Short]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -236,23 +237,23 @@ package object sigfigs {
     new ShortSigOps.SignificantOpsIntegral(left)
 
   // same as ShortSigOps but provides a reversed ordering
-  object ReverseShortSigOps extends ReverseSigOps[Short] {
+  object ReverseShortSigOps extends ReverseSigIntegralOps[Short] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toShort.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toShort.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ShortSigOps
-    val tag: ClassTag[SignificantDigits[Short]] = 
-      classTag[SignificantDigits[Short]]
+    //    val tag: ClassTag[SignificantDigits[Short]] =
+      //classTag[SignificantDigits[Short]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
   // to make the SignificantDigits[Int] work
-  implicit object IntSigOps extends ForwardSigOps[Int] {
+  implicit object IntSigOps extends ForwardSigIntegralOps[Int] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toInt.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toInt.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseIntSigOps
-    val tag: ClassTag[SignificantDigits[Int]] = classTag[SignificantDigits[Int]]
+    //val tag: ClassTag[SignificantDigits[Int]] = classTag[SignificantDigits[Int]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -262,23 +263,23 @@ package object sigfigs {
     new IntSigOps.SignificantOpsIntegral(left)
 
   // same as IntSigOps but provides a reversed ordering
-  object ReverseIntSigOps extends ReverseSigOps[Int] {
+  object ReverseIntSigOps extends ReverseSigIntegralOps[Int] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toInt.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toInt.asInstanceOf[T]
     override def reverse: Ordering[SDType] = IntSigOps
-    val tag: ClassTag[SignificantDigits[Int]] = classTag[SignificantDigits[Int]]
+//    val tag: ClassTag[SignificantDigits[Int]] = classTag[SignificantDigits[Int]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
   // to make the SignificantDigits[Long] work
-  implicit object LongSigOps extends ForwardSigOps[Long] {
+  implicit object LongSigOps extends ForwardSigIntegralOps[Long] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toLong.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toLong.asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseLongSigOps
-    val tag: ClassTag[SignificantDigits[Long]] = 
-      classTag[SignificantDigits[Long]]
+    //val tag: ClassTag[SignificantDigits[Long]] =
+      //classTag[SignificantDigits[Long]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -288,18 +289,18 @@ package object sigfigs {
     new LongSigOps.SignificantOpsIntegral(left)
 
   // same as LongSigOps but provides a reversed ordering
-  object ReverseLongSigOps extends ReverseSigOps[Long] {
+  object ReverseLongSigOps extends ReverseSigIntegralOps[Long] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toLong.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toLong.asInstanceOf[T]
     override def reverse: Ordering[SDType] = LongSigOps
-    val tag: ClassTag[SignificantDigits[Long]] = 
-      classTag[SignificantDigits[Long]]
+    //val tag: ClassTag[SignificantDigits[Long]] =
+      //classTag[SignificantDigits[Long]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
   // to make the SignificantDigits[Float] work
-  implicit object FloatSigOps extends ForwardSigOps[Float] {
+  implicit object FloatSigOps extends ForwardSigFractionalOps[Float] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toFloat.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toFloat.asInstanceOf[T]
@@ -309,8 +310,8 @@ package object sigfigs {
       o.makeSigDigits(
         Math.round(x.toFloat).asInstanceOf[T2], calculateRoundedDigits(x))
     override def ulp(x: SDType): SDType = makeSigDigits(Math.ulp(x.toFloat), 1)
-    val tag: ClassTag[SignificantDigits[Float]] = 
-      classTag[SignificantDigits[Float]]
+    //    val tag: ClassTag[SignificantDigits[Float]] =
+      //classTag[SignificantDigits[Float]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -320,18 +321,18 @@ package object sigfigs {
     new FloatSigOps.SignificantOpsFractional(left)
 
   // same as FloatSigOps but provides a reversed ordering
-  object ReverseFloatSigOps extends ReverseSigOps[Float] {
+  object ReverseFloatSigOps extends ReverseSigFractionalOps[Float] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toFloat.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.toFloat.asInstanceOf[T]
     override def reverse: Ordering[SDType] = FloatSigOps
-    val tag: ClassTag[SignificantDigits[Float]] = 
-      classTag[SignificantDigits[Float]]
+    //val tag: ClassTag[SignificantDigits[Float]] =
+      //classTag[SignificantDigits[Float]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
   // to make the SignificantDigits[Double] work
-  implicit object DoubleSigOps extends ForwardSigOps[Double] {
+  implicit object DoubleSigOps extends ForwardSigFractionalOps[Double] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toDouble.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.asInstanceOf[T]
@@ -341,8 +342,8 @@ package object sigfigs {
       o.makeSigDigits(
         Math.round(x.toDouble).asInstanceOf[T2], calculateRoundedDigits(x))
     override def ulp(x: SDType): SDType = makeSigDigits(Math.ulp(x.v), 1)
-    val tag: ClassTag[SignificantDigits[Double]] = 
-      classTag[SignificantDigits[Double]]
+    //val tag: ClassTag[SignificantDigits[Double]] =
+      //classTag[SignificantDigits[Double]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -352,25 +353,25 @@ package object sigfigs {
     new DoubleSigOps.SignificantOpsFractional(left)
 
   // same as DoubleSigOps but provides a reversed ordering
-  object ReverseDoubleSigOps extends ReverseSigOps[Double] {
+  object ReverseDoubleSigOps extends ReverseSigFractionalOps[Double] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       str.toDouble.asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = d.asInstanceOf[T]
     override def reverse: Ordering[SDType] = DoubleSigOps
-    val tag: ClassTag[SignificantDigits[Double]] = 
-      classTag[SignificantDigits[Double]]
+    //val tag: ClassTag[SignificantDigits[Double]] =
+      //classTag[SignificantDigits[Double]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
   // to make the SignificantDigits[BigInt] work
-  implicit object BigIntSigOps extends ForwardSigOps[BigInt] {
+  implicit object BigIntSigOps extends ForwardSigIntegralOps[BigInt] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       BigInt(str).asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = 
       BigInt(d.toLong).asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseBigIntSigOps
-    val tag: ClassTag[SignificantDigits[BigInt]] = 
-      classTag[SignificantDigits[BigInt]]
+    //val tag: ClassTag[SignificantDigits[BigInt]] =
+      //classTag[SignificantDigits[BigInt]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -380,26 +381,26 @@ package object sigfigs {
     new BigIntSigOps.SignificantOpsIntegral(left)
 
   // same as BigIntSigOps but provides a reversed ordering
-  object ReverseBigIntSigOps extends ReverseSigOps[BigInt] {
+  object ReverseBigIntSigOps extends ReverseSigIntegralOps[BigInt] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       BigInt(str).asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = 
       BigInt(d.toLong).asInstanceOf[T]
     override def reverse: Ordering[SDType] = BigIntSigOps
-    val tag: ClassTag[SignificantDigits[BigInt]] = 
-      classTag[SignificantDigits[BigInt]]
+    //    val tag: ClassTag[SignificantDigits[BigInt]] =
+      //classTag[SignificantDigits[BigInt]]
   }
 
   // implicit Numeric implementations and implicit type conversions needed
   // to make the SignificantDigits[BigDecimal] work
-  implicit object BigDecimalSigOps extends ForwardSigOps[BigDecimal] {
+  implicit object BigDecimalSigOps extends ForwardSigFractionalOps[BigDecimal] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       BigDecimal(str).asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = 
       BigDecimal(d).asInstanceOf[T]
     override def reverse: Ordering[SDType] = ReverseBigDecimalSigOps
-    val tag: ClassTag[SignificantDigits[BigDecimal]] = 
-      classTag[SignificantDigits[BigDecimal]]
+    //val tag: ClassTag[SignificantDigits[BigDecimal]] =
+      //classTag[SignificantDigits[BigDecimal]]
   }
 
   // implicit type conversion that injects the Ops classes with all the correct
@@ -409,14 +410,14 @@ package object sigfigs {
     new BigDecimalSigOps.SignificantOpsFractional(left)
 
   // same as BigDecimalSigOps but provides a reversed ordering
-  object ReverseBigDecimalSigOps extends ReverseSigOps[BigDecimal] {
+  object ReverseBigDecimalSigOps extends ReverseSigFractionalOps[BigDecimal] {
     def to[T](str: String)(implicit n: Numeric[T]): T = 
       BigDecimal(str).asInstanceOf[T]
     def to[T](d: Double)(implicit n: Numeric[T]): T = 
       BigDecimal(d).asInstanceOf[T]
     override def reverse: Ordering[SDType] = BigDecimalSigOps
-    val tag: ClassTag[SignificantDigits[BigDecimal]] = 
-      classTag[SignificantDigits[BigDecimal]]
+    //val tag: ClassTag[SignificantDigits[BigDecimal]] = 
+      //classTag[SignificantDigits[BigDecimal]]
   }
 
   // to T value from SignificantDigits
