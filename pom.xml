@@ -36,7 +36,7 @@
     <!-- Scala.js tool stack. -->
     <notavailable.scalajs>true</notavailable.scalajs>
     <version.scalajs.epoch>0.6</version.scalajs.epoch>
-    <version.scalajs.release>0.6.25</version.scalajs.release>
+    <version.scalajs.release>0.6.26</version.scalajs.release>
     <version.scalajs.library>sjs${version.scalajs.epoch}_${version.scala.epoch}</version.scalajs.library>
 
     <!-- Scala.native tool stack. -->
@@ -51,8 +51,11 @@
     <maven.compiler.target>${version.java}</maven.compiler.target><!-- Used by M2E. -->
 
     <!-- scalatest -->
-    <version.scalatest>3.0.6-SNAP6</version.scalatest>
-    <version.scalajstest>3.0.6-SNAP2</version.scalajstest>
+    <version.scalatest>3.0.6</version.scalatest>
+
+    <!-- JUnit 4 Testing for JS -->
+    <version.junit4>4.12</version.junit4>
+    <version.maven.testing>2.22.1</version.maven.testing>
     
     <!-- File format. -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -91,14 +94,6 @@
       <version>${version.scalatest}</version>
       <scope>test</scope>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>org.scalatest</groupId>
-      <artifactId>scalatestjs_${version.scalajs.library}</artifactId>
-      <version>${version.scalajstest}</version>
-      <scope>test</scope>
-    </dependency>
-    -->
     <dependency>
       <groupId>org.scalacheck</groupId>
       <artifactId>scalacheck_${version.scala.epoch}</artifactId>
@@ -134,8 +129,8 @@
           <!-- <nativeLogClassPath>true</nativeLogClassPath> -->
           <!-- <nativeLogBuildProcs>true</nativeLogBuildProcs> -->
           <!-- <nativeLogBuildVerts>true</nativeLogBuildVerts> -->
-          <nativeLogBuildStats>true</nativeLogBuildStats>
-          <nativeLogBuildTimes>true</nativeLogBuildTimes>
+          <!-- <nativeLogBuildStats>true</nativeLogBuildStats> -->
+          <!-- <nativeLogBuildTimes>true</nativeLogBuildTimes> -->
 
 	  <defineBridge>
             <dependency>
@@ -223,21 +218,13 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <skipTests>true</skipTests>
-        </configuration>
-      </plugin>
       <!-- enable scalatest -->
       <plugin>
         <groupId>org.scalatest</groupId>
         <artifactId>scalatest-maven-plugin</artifactId>
         <version>1.0</version>
         <configuration>
-          <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+          <reportsDirectory>${project.build.directory}/jvm-surefire-reports</reportsDirectory>
           <junitxml>.</junitxml>
           <filereports>SigFigs-TestSuite.txt</filereports>
 	  <parallel>false</parallel>

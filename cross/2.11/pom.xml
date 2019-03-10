@@ -24,34 +24,19 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>${version.scala.release}</version>
-    </dependency>
+    <!--
     <dependency>
       <groupId>org.scala-native</groupId>
       <artifactId>scalalib_${version.scalanat.library}</artifactId>
       <version>${version.scalanat.release}</version>
       <scope>provided</scope>
     </dependency>
+    -->
     <dependency>
       <groupId>org.scala-js</groupId>
       <artifactId>scalajs-library_${version.scala.epoch}</artifactId>
       <version>${version.scalajs.release}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_${version.scala.epoch}</artifactId>
-      <version>${version.scalatest}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.scalatest</groupId>
-      <artifactId>scalatestjs_${version.scalajs.library}</artifactId>
-      <version>${version.scalajstest}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -72,14 +57,16 @@
               <version>${version.scala.plugin.macro}</version>
             </dependency>
             <!-- Generate Scala.native *.nir classes. -->
+	    <!--
             <dependency>
               <groupId>org.scala-native</groupId>
               <artifactId>nscplugin_${version.scala.release}</artifactId>
               <version>${version.scalanat.release}</version>
             </dependency>
+	    -->
           </definePluginList>
+	  <compileRegexScalaExclude>.*(TerraOps|Scala13|DimensionlessSpec|SuiteTest|Checks|DataRateSpec|InformationSpec|TimeSpec|TimeSquaredSpec|FrequencySpec).*</compileRegexScalaExclude>
         </configuration>
-
 
         <executions>
           <execution>
@@ -108,12 +95,13 @@
 	      -->
 
 	      <!-- scala-js -->
+	      <!--
 	      <goal>scala-js-link-main</goal>
               <goal>scala-js-link-test</goal>
 
               <goal>scala-js-env-prov-webjars</goal>
               <goal>scala-js-env-prov-nodejs</goal>
-              <goal>scala-js-env-conf-nodejs</goal>
+	      -->
             </goals>
           </execution>
         </executions>

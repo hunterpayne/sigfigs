@@ -31,6 +31,9 @@
         <groupId>com.carrotgarden.maven</groupId>
         <artifactId>scalor-maven-plugin_2.12</artifactId>
 	<version>1.4.2.20180508161326</version>
+	<configuration>
+	  <compileRegexScalaExclude>.*(SuiteTest|Pre13).*</compileRegexScalaExclude>
+	</configuration>
         <executions>
           <execution>
 	    <id>scala-build</id>
@@ -57,12 +60,14 @@
 	      -->
 
 	      <!-- scala-js -->
+	      <!--
 	      <goal>scala-js-link-main</goal>
               <goal>scala-js-link-test</goal>
 
               <goal>scala-js-env-prov-webjars</goal>
               <goal>scala-js-env-prov-nodejs</goal>
               <goal>scala-js-env-conf-nodejs</goal>
+	      -->
             </goals>
           </execution>
         </executions>
